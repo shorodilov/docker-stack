@@ -9,9 +9,9 @@ User=root
 Group=docker
 RemainAfterExit=true
 # the actual working directory is obtained using the instance name,
-# e.g. unit named "example" will use "/etc/docker/example" as its
+# e.g. unit named "example" will use "/etc/docker/docker-stack/example" as its
 # working directory
-WorkingDirectory=/etc/docker/%i
+WorkingDirectory=/etc/docker/docker-stack/%i
 ExecStart=/usr/bin/docker compose up -d --remove-orphans
 ExecStop=/usr/bin/docker compose down
 
