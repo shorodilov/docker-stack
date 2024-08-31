@@ -1,0 +1,42 @@
+# PowerDNS
+# ========
+#
+# The PowerDNS Authoritative Server is a versatile nameserver that
+# supports a large number of backends. These backends can either be
+# plain zone files or be more dynamic in nature.
+#
+# Environment variables declared in this file:
+# - POWERDNS_AUTH_API_KEY
+#
+# Running as-a-systemd-unit
+# -------------------------
+# This file is compatible with the `docker-stack@.service` template.
+# Once this file is located in the * /etc/docker/powerdns* folder,
+# the service can be referenced as `docker-stack@powerdns`.
+#
+services:
+  powerdns:
+    image: docker.io/powerdns/pdns-auth-48
+    container_name: powerdns
+    volumes:
+      - powerdns-etc:/etc/powerdns
+      - powerdns:/var/lib/powerdns
+    networks:
+      - powerdns
+      - docker_proxy01
+    ports:
+      - "53:53"
+      - "53:53/udp"
+      - "8081:8081"
+    environment:
+      PDNS_AUTH_API_KEY: "${POWERDNS_AUTH_API_KEY}"
+
+volumes:
+  powerdns-etc:
+  powerdns:
+
+networks:
+  powerdns:
+    internal: true
+  docker_proxy01:
+    external: true
