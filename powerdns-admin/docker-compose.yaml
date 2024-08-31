@@ -1,0 +1,61 @@
+# PowerDNS Admin
+# ==============
+#
+# A PowerDNS web interface with advanced features.
+# See also:
+# - https://github.com/PowerDNS-Admin/PowerDNS-Admin
+#
+# Environment variables declared in this file:
+# - POWERDNS_ADMIN_DB_PASSWORD
+# - POWERDNS_ADMIN_SALT
+# - POWERDNS_ADMIN_SECRET_KEY
+#
+# Running as-a-systemd-unit
+# -------------------------
+# This file is compatible with the `docker-stack@.service` template.
+# Once this file is located in the * /etc/docker/powerdns-admin* folder,
+# the service can be referenced as `docker-stack@powerdns-admin`.
+#
+services:
+  powerdnsadmin_db:
+    image: docker.io/postgres:15.8-alpine3.19
+    container_name: powerdnsadmin_db
+    volumes:
+      - powerdnsadmin_db:/var/lib/postgresql/data
+    networks:
+      - powerdnsadmin_stack
+    environment:
+      POSTGRES_PASSWORD: "${POWERDNS_ADMIN_DB_PASSWORD}"
+      POSTGRES_USER: powerdnsadmin
+      POSTGRES_DB: powerdnsadmin
+
+  powerdnsadmin:
+    image: docker.io/powerdnsadmin/pda-legacy
+    container_name: powerdnsadmin
+    depends_on:
+      - powerdnsadmin_db
+    volumes:
+      - powerdnsadmin:/data
+    networks:
+      - powerdnsadmin_stack
+      - docker_proxy01
+    ports:
+      - "9191:80"
+    links:
+      - "powerdnsadmin_db:db"
+    environment:
+      CAPTCHA_ENABLE: False
+      SESSION_TYPE: filesystem
+      SALT: "${POWERDNS_ADMIN_SALT}"
+      SECRET_KEY: "${POWERDNS_ADMIN_SECRET_KEY}"
+      SQLALCHEMY_DATABASE_URI: "postgresql://powerdnsadmin:${POWERDNS_ADMIN_DB_PASSWORD}@db:5432/powerdnsadmin"
+
+volumes:
+  powerdnsadmin_db:
+  powerdnsadmin:
+
+networks:
+  powerdnsadmin_stack:
+    internal: true
+  docker_proxy01:
+    external: true
