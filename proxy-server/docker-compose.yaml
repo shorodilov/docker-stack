@@ -2,17 +2,22 @@
 
 services:
   proxy_server:
-    image: docker.io/nginx
+    image: docker.io/jc21/nginx-proxy-manager:latest
     container_name: proxy_server
+    restart: unless-stopped
     volumes:
-      - ./templates:/etc/nginx/templates:ro
-      - ./logs:/var/logs/nginx
+      - data:/data
+      - letsencrypt:/etc/letsencrypt
     networks:
       - docker_proxy01
     ports:
       - "80:80"
       - "443:443"
-    env_file: .env
+      - "81:81"
+
+volumes:
+  data:
+  letsencrypt:
 
 networks:
   docker_proxy01:
