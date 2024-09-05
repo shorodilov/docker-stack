@@ -27,7 +27,7 @@ services:
     ports:
       - "53:53"
       - "53:53/udp"
-      - "5381:8081"
+      - "8081:8081"
     environment:
       PDNS_AUTH_API_KEY: "${POWERDNS_AUTH_API_KEY}"
 
