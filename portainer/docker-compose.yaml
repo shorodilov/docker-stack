@@ -11,8 +11,8 @@ services:
     networks:
       - docker_proxy01
     ports:
-      - "8000:8000"
-      - "9443:9443"
+      - "42080:8000"
+      - "42443:9443"
 
 volumes:
   portainer_data:
