@@ -13,6 +13,7 @@ services:
     ports:
       - "42080:8000"
       - "42443:9443"
+      - "42090:9000"
 
 volumes:
   portainer_data:
