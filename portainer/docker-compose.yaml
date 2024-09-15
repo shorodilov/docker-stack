@@ -1,0 +1,23 @@
+# Docker portainer container
+
+services:
+  portainer:
+    image: docker.io/portainer/portainer-ce:2.21.1
+    container_name: portainer
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - docker_proxy01
+    ports:
+      - "42080:8000"
+      - "42443:9443"
+      - "42090:9000"
+
+volumes:
+  portainer_data:
+
+networks:
+  docker_proxy01:
+    external: true
